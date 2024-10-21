@@ -1,5 +1,17 @@
+/* Asegúrate de que el fondo cubra toda la página */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  color: white;
+}
+
 .App {
-  text-align: center;
+  background: linear-gradient(to right, #2C3E50, #1ABC9C); /* Fondo en degradado */
+  min-height: 100vh; /* Asegura que el fondo cubra toda la altura */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .App-logo {
@@ -35,4 +47,25 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Elimina el padding y ajusta el contenido */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  width: 100%;
+}
+
+.no-background {
+  background: none; /* Quita el fondo en login/register */
+}
+
+.footer {
+  background-color: #2C3E50;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+  position: relative;
+  bottom: 0;
 }

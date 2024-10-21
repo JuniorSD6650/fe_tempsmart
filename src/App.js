@@ -1,25 +1,47 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import MyNavbar from './components/Navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Footer from './components/Footer';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
+import HomePage from './HomePage';
 import Cursos from './components/Cursos';
 import Horarios from './components/Horarios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Footer from './components/Footer';
+import Register from './components/Register';
+import Login from './components/Login';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
+    const location = useLocation();
+
+    const hideMenuFooter = location.pathname === '/login' || location.pathname === '/register';
+
     return (
-        <Router>
-            <div className="App">
-                <MyNavbar />
+        <div className={`App ${hideMenuFooter ? 'no-background' : ''}`}>
+            {!hideMenuFooter && <MyNavbar />}
+            <div className="main-content">
                 <Routes>
-                    <Route path="/cursos" element={<Cursos />} />
-                    <Route path="/horarios" element={<Horarios />} />
-                    <Route path="/" element={<h1>Página Principal</h1>} />
+                    {/* Páginas de acceso público */}
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+
+                    {/* Rutas protegidas */}
+                    <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+                    <Route path="/cursos" element={<PrivateRoute><Cursos /></PrivateRoute>} />
+                    <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />
                 </Routes>
-                <Footer />
             </div>
-        </Router>
+            {!hideMenuFooter && <Footer />}
+        </div>
     );
 }
 
-export default App;
+// Asegúrate de exportar el componente por defecto
+export default function AppWithRouter() {
+    return (
+        <Router>
+            <App />
+        </Router>
+    );
+}

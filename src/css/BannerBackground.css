@@ -1,0 +1,20 @@
+/* BannerBackground.css */
+.banner-background {
+    background: linear-gradient(to right, #2C3E50, #1ABC9C); /* Simula los colores del banner */
+    min-height: 100vh; /* Asegura que cubra toda la altura de la pantalla */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover; /* Asegura que el fondo se ajuste correctamente */
+    margin: 0; /* Elimina márgenes */
+    padding: 0; /* Elimina relleno */
+  }
+  
+  .banner-background h1, .banner-background p {
+    color: white;
+  }
+  
+  .banner-background button {
+    margin: 10px;
+  }
+  
