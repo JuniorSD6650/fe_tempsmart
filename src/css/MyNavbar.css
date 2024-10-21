@@ -1,0 +1,115 @@
+/* Estilo para el navbar */
+.custom-navbar {
+    background-color: #2C3E50;
+    /* Azul más oscuro para el fondo */
+    border-bottom: 3px solid #1ABC9C;
+    /* Verde para resaltar el borde inferior */
+}
+
+.navbar-brand-custom {
+    color: #FFFFFF !important;
+    /* Texto en blanco para la marca */
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link-custom {
+    color: #FFFFFF !important;
+    /* Texto blanco para los enlaces normales */
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.nav-link-custom:hover {
+    color: #1ABC9C !important;
+    /* Color verde al pasar el cursor por el enlace */
+    text-decoration: none;
+    /* Elimina subrayado */
+}
+
+/* Enlace activo */
+.nav-link-custom.active {
+    color: #FFFFFF !important;
+    /* Mantener el texto blanco para el enlace activo */
+    border-bottom: 3px solid #1ABC9C;
+    /* Añadir una línea verde debajo del enlace activo */
+    font-weight: bold;
+    padding-bottom: 5px;
+    /* Añadir un poco de espacio debajo del texto */
+}
+
+/* Estilo para cuando el navbar está en versión colapsada (móvil) */
+.custom-navbar .navbar-toggler {
+    border-color: #FFFFFF;
+}
+
+.custom-navbar .navbar-toggler-icon {
+    background-image: none;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+}
+
+/*---------------------------------------------------------------------------------------------*/
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    /* Usar Google Fonts */
+    background-color: #f5f5f5;
+    /* Fondo de la página */
+    color: #333;
+}
+
+/* Main Content */
+.main-content {
+    padding: 2rem;
+}
+
+/* Tarjetas de Cursos y Horarios */
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    padding: 1.5rem;
+    text-align: left;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #1ABC9C;
+}
+
+.card-body {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #1ABC9C;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #16a085;
+}
+
+.cursos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.footer {
+    background-color: #2C3E50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
