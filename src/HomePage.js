@@ -1,10 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import MyNavbar from './components/Navbar';
-import Footer from './components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import BannerBackground from './components/BannerBackground'; // Importar el fondo
+import BannerBackground from './components/general/BannerBackground'; // Importar el fondo
 
 function HomePage() {
   return (
@@ -24,7 +22,7 @@ function HomePage() {
         {/* Sección de características destacadas */}
         <Row className="mb-5">
           <Col md={12}>
-            <h2>Características Destacadas</h2>
+            <h2 className='text_white'>Características Destacadas</h2>
           </Col>
           <Col md={4}>
             <Card className="mb-3">
@@ -61,7 +59,7 @@ function HomePage() {
         {/* Información del Proyecto */}
         <Row>
           <Col md={12}>
-            <h2>Acerca del Proyecto</h2>
+            <h2 className='text_white'>Acerca del Proyecto</h2>
             <p>
               Este proyecto ha sido desarrollado como parte del curso de Tesis II en la Universidad de Huánuco,
               bajo la supervisión del docente Aldo Enrique Ramirez Chaupis y el estudiante Edwin Junior Saavedra Dominguez.

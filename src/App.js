@@ -1,16 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import MyNavbar from './components/Navbar';
-import Footer from './components/Footer';
+import MyNavbar from './components/general/Navbar';
+import Footer from './components/general/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import HomePage from './HomePage';
-import Cursos from './components/Cursos';
-import Horarios from './components/Horarios';
-import Register from './components/Register';
-import Login from './components/Login';
-import PrivateRoute from './components/PrivateRoute';
+import Cursos from './components/cursos/Cursos';
+import Horarios from './components/horarios/Horarios';
+import Login from './components/usuario/LoginRegister';
+import PrivateRoute from './components/usuario/PrivateRoute';
 
 function App() {
     const location = useLocation();
@@ -22,11 +21,8 @@ function App() {
             {!hideMenuFooter && <MyNavbar />}
             <div className="main-content">
                 <Routes>
-                    {/* Páginas de acceso público */}
-                    <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
 
-                    {/* Rutas protegidas */}
                     <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
                     <Route path="/cursos" element={<PrivateRoute><Cursos /></PrivateRoute>} />
                     <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />

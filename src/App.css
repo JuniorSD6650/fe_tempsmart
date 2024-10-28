@@ -1,5 +1,6 @@
 /* Asegúrate de que el fondo cubra toda la página */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -7,8 +8,10 @@ html, body {
 }
 
 .App {
-  background: linear-gradient(to right, #2C3E50, #1ABC9C); /* Fondo en degradado */
-  min-height: 100vh; /* Asegura que el fondo cubra toda la altura */
+  background: linear-gradient(to right, #2C3E50, #1ABC9C);
+  /* Fondo en degradado */
+  min-height: 100vh;
+  /* Asegura que el fondo cubra toda la altura */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -44,6 +47,7 @@ html, body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -57,7 +61,8 @@ html, body {
 }
 
 .no-background {
-  background: none; /* Quita el fondo en login/register */
+  background: none;
+  color: white !important;
 }
 
 .footer {
@@ -68,4 +73,16 @@ html, body {
   width: 100%;
   position: relative;
   bottom: 0;
+}
+
+p.card-text {
+  color: #282c34 !important;
+}
+
+.text_black {
+  color: black !important;
+}
+
+.text_white {
+  color: white !important;
 }

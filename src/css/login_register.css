@@ -1,0 +1,119 @@
+/* Contenedor principal */
+.login-register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    height: 80vh;
+}
+
+/* Contenedor del login y register */
+.form-side {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    /* Aumenta el ancho total */
+    justify-content: space-between;
+    /* Coloca los formularios en sus respectivas mitades */
+    background-color: #ffffff;
+    z-index: 2;
+    min-height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cada formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    margin: 0 auto;
+    /* Centra horizontalmente */
+}
+
+/* Tamaño del título */
+h2 {
+    color: #2C3E50;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    /* Espacio debajo del título */
+}
+
+/* Botón */
+.btn_login {
+    background-color: #1ABC9C;
+    border: none;
+    width: 50%;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+
+.btn_login:hover {
+    background-color: #16a085;
+}
+
+/* Estilo del enlace */
+.link-like {
+    cursor: pointer;
+    color: #1ABC9C;
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Imagen de fondo que se mueve */
+.image-side {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    z-index: 2;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.8s ease-in-out;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+/* Imagen cuando está en la derecha */
+.image-side.flipped {
+    transform: translateX(100%);
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.login {
+    padding-top: 5%;
+}
+
+.register {
+    padding-top: 5%;
+}
+
+@media (max-width: 767px) {
+    .image-side {
+        display: none;
+    }
+    .register, .login {
+        display: none;
+    }
+    .d-block {
+        display: block !important;
+    }
+    .d-none {
+        display: none !important;
+    }
+}

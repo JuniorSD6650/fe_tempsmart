@@ -8,7 +8,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Importar el icono de salir
-import '../css/MyNavbar.css'; 
+import '../../css/MyNavbar.css'; 
 
 function MyNavbar() {
   const navigate = useNavigate();

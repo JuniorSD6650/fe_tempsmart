@@ -1,6 +1,6 @@
 // BannerBackground.js
 import React from 'react';
-import './../css/BannerBackground.css';
+import './../../css/BannerBackground.css';
 
 function BannerBackground({ children }) {
   return (
