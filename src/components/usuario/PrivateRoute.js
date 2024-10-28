@@ -1,9 +1,10 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { getToken } from '../general/comun';
 
 const PrivateRoute = ({ children }) => {
-    const token = localStorage.getItem('token');  // Verificamos si el token está almacenado
-    return token ? children : <Navigate to="/login" />;  // Redirige al login si no está autenticado
+    const token = getToken(); 
+    return token ? children : <Navigate to="/login" />; 
 };
 
 export default PrivateRoute;

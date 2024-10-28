@@ -3,6 +3,7 @@ import { Form, Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import '../../css/login_register.css';
 import fondoTiempo from '../../images/fondo_tiempo.jpg';
+import { apiRequest, setToken } from '../general/comun';
 
 const LoginRegister = () => {
     const [isFlipped, setIsFlipped] = useState(false); // Controla el estado de la imagen
@@ -30,18 +31,12 @@ const LoginRegister = () => {
     const handleSubmitLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/auth/login/', {
+            const data = await apiRequest({
+                endpoint: '/auth/login/',
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
+                body: { username, password }
             });
-            if (!response.ok) {
-                throw new Error('Error en la autenticación');
-            }
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
+            setToken(data.token);
             navigate('/');
         } catch (error) {
             setError('Error al iniciar sesión. Verifique sus credenciales.');
@@ -51,18 +46,12 @@ const LoginRegister = () => {
     const handleSubmitRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/auth/register/', {
+            const data = await apiRequest({
+                endpoint: '/auth/register/',
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, email, password }),
+                body: { username, email, password }
             });
-            if (!response.ok) {
-                throw new Error('Error en el registro');
-            }
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
+            setToken(data.token);
             navigate('/');
         } catch (error) {
             setError('Error al registrar el usuario.');
