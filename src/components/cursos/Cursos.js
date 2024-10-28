@@ -1,20 +1,20 @@
+// Cursos.js
 import React, { useState, useEffect } from 'react';
 import TarjetaCurso from './TarjetaCurso';
-import { apiRequest } from '../general/comun';
+import { apiRequest, confirmarAccion } from '../general/comun';
 import Swal from 'sweetalert2';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Autocomplete, TextField } from '@mui/material';
 
 function Cursos() {
-  const [cursos, setCursos] = useState([]);            // Cursos asignados al usuario
-  const [todosLosCursos, setTodosLosCursos] = useState([]); // Lista de todos los cursos generales
-  const [error, setError] = useState(null);            // Estado para manejar errores
-  const [mostrarModal, setMostrarModal] = useState(false);  // Estado para mostrar el modal
+  const [cursos, setCursos] = useState([]);
+  const [todosLosCursos, setTodosLosCursos] = useState([]);
+  const [error, setError] = useState(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Obtener los cursos del usuario
   const obtenerCursosUsuario = async () => {
     try {
       const data = await apiRequest({
-        endpoint: '/cursousuario/',
+        endpoint: '/cursos-usuario/',
         method: 'GET'
       });
       setCursos(data);
@@ -24,7 +24,6 @@ function Cursos() {
     }
   };
 
-  // Obtener todos los cursos generales para mostrar en el modal
   const obtenerTodosLosCursos = async () => {
     try {
       const data = await apiRequest({
@@ -38,30 +37,36 @@ function Cursos() {
     }
   };
 
-  // Asignar un curso al usuario
   const asignarCurso = async (cursoId) => {
     try {
       await apiRequest({
-        endpoint: '/cursousuario/',
+        endpoint: '/cursos-usuario/',
         method: 'POST',
         body: { curso_id: cursoId }
       });
-      obtenerCursosUsuario(); // Actualiza los cursos asignados
+      obtenerCursosUsuario();
       setMostrarModal(false);
       Swal.fire('Asignado!', 'El curso ha sido asignado exitosamente.', 'success');
     } catch (error) {
+      setMostrarModal(false);
       Swal.fire('Error', 'Error al asignar el curso', 'error');
     }
   };
 
   // Desasignar un curso del usuario
   const desasignarCurso = async (cursoUsuarioId) => {
+    const confirmacion = await confirmarAccion(
+      "¿Estás seguro de eliminar este curso?",
+      "No podrás deshacer esta acción"
+    );
+    if (!confirmacion) return;
+
     try {
       await apiRequest({
-        endpoint: `/cursousuario/${cursoUsuarioId}/`,
+        endpoint: `/cursos-usuario/${cursoUsuarioId}/`,
         method: 'DELETE'
       });
-      obtenerCursosUsuario(); // Actualiza los cursos asignados
+      setCursos(prevCursos => prevCursos.filter(curso => curso.id !== cursoUsuarioId));
       Swal.fire('Eliminado!', 'El curso ha sido eliminado exitosamente.', 'success');
     } catch (error) {
       Swal.fire('Error', 'Error al eliminar el curso asignado', 'error');
@@ -69,7 +74,7 @@ function Cursos() {
   };
 
   useEffect(() => {
-    obtenerCursosUsuario(); // Cargar los cursos del usuario al montar el componente
+    obtenerCursosUsuario();
   }, []);
 
   return (
@@ -77,7 +82,7 @@ function Cursos() {
       <h1>Mis Cursos</h1>
       <Button variant="contained" color="primary" onClick={() => {
         obtenerTodosLosCursos();
-        setMostrarModal(true); // Abre el modal para asignar cursos
+        setMostrarModal(true);
       }}>
         Asignar Nuevo Curso
       </Button>
@@ -90,23 +95,22 @@ function Cursos() {
             key={cursoUsuario.id}
             titulo={cursoUsuario.curso.nombre}
             descripcion={cursoUsuario.curso.descripcion || 'No hay descripción disponible'}
-            onEliminar={() => desasignarCurso(cursoUsuario.id)} // Botón para eliminar curso
+            onEliminar={() => desasignarCurso(cursoUsuario.id)}
           />
         ))}
       </div>
 
-      {/* Modal para mostrar todos los cursos generales */}
       <Dialog open={mostrarModal} onClose={() => setMostrarModal(false)}>
         <DialogTitle>Asignar un Nuevo Curso</DialogTitle>
         <DialogContent>
-          {todosLosCursos.map((curso) => (
-            <div key={curso.id} className="curso-item">
-              <Typography variant="body1">{curso.nombre}</Typography>
-              <Button variant="contained" color="secondary" onClick={() => asignarCurso(curso.id)}>
-                Asignarme
-              </Button>
-            </div>
-          ))}
+          <Autocomplete
+            options={todosLosCursos}
+            getOptionLabel={(curso) => curso.nombre}
+            renderInput={(params) => <TextField {...params} label="Selecciona un curso" variant="outlined" />}
+            onChange={(event, selectedCurso) => {
+              if (selectedCurso) asignarCurso(selectedCurso.id);
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setMostrarModal(false)} color="primary">

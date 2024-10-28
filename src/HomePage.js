@@ -1,8 +1,9 @@
 import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Importar Link para navegación
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import BannerBackground from './components/general/BannerBackground'; // Importar el fondo
+import BannerBackground from './components/general/BannerBackground';
 
 function HomePage() {
   return (
@@ -14,8 +15,12 @@ function HomePage() {
             <p className="lead">
               Plataforma inteligente para la gestión de horarios y tareas académicas
             </p>
-            <Button variant="primary" className="mx-2">Ver Cursos</Button>
-            <Button variant="secondary" className="mx-2">Gestionar Horarios</Button>
+            <Link to="/cursos">
+              <Button variant="primary" className="mx-2">Ver Cursos</Button>
+            </Link>
+            <Link to="/horarios">
+              <Button variant="secondary" className="mx-2">Gestionar Horarios</Button>
+            </Link>
           </Col>
         </Row>
 
@@ -25,7 +30,7 @@ function HomePage() {
             <h2 className='text_white'>Características Destacadas</h2>
           </Col>
           <Col md={4}>
-            <Card className="mb-3">
+            <Card className="mb-3 h-100">
               <Card.Body>
                 <Card.Title>Carga y Procesamiento de PDFs</Card.Title>
                 <Card.Text>
@@ -35,7 +40,7 @@ function HomePage() {
             </Card>
           </Col>
           <Col md={4}>
-            <Card className="mb-3">
+            <Card className="mb-3 h-100">
               <Card.Body>
                 <Card.Title>Gestión por Voz</Card.Title>
                 <Card.Text>
@@ -45,7 +50,7 @@ function HomePage() {
             </Card>
           </Col>
           <Col md={4}>
-            <Card className="mb-3">
+            <Card className="mb-3 h-100">
               <Card.Body>
                 <Card.Title>Notificaciones Inteligentes</Card.Title>
                 <Card.Text>

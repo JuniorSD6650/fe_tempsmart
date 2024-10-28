@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import BookIcon from '@mui/icons-material/Book';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
+import TaskIcon from '@mui/icons-material/Task';
 import MenuIcon from '@mui/icons-material/Menu';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Importar el icono de salir
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import '../../css/MyNavbar.css'; 
 
 function MyNavbar() {
@@ -36,8 +37,11 @@ function MyNavbar() {
             <LinkContainer to="/horarios">
               <Nav.Link className="nav-link-custom"><ScheduleIcon /> Horarios</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/contacto">
-              <Nav.Link className="nav-link-custom"><ContactMailIcon /> Contacto</Nav.Link>
+            <LinkContainer to="/tareas">
+              <Nav.Link className="nav-link-custom"><TaskIcon /> Tareas</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/fijas">
+              <Nav.Link className="nav-link-custom"><GpsFixedIcon /> Fijas</Nav.Link>
             </LinkContainer>
             {/* Icono de Cerrar Sesión */}
             <Nav.Link onClick={handleLogout} className="nav-link-custom">

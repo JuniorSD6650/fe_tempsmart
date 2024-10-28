@@ -8,8 +8,11 @@ import './App.css';
 import HomePage from './HomePage';
 import Cursos from './components/cursos/Cursos';
 import Horarios from './components/horarios/Horarios';
+import Tareas from './components/tareas/tareas';
 import Login from './components/usuario/LoginRegister';
 import PrivateRoute from './components/usuario/PrivateRoute';
+import Fijas from './components/ayuda/fijas';
+
 
 function App() {
     const location = useLocation();
@@ -26,6 +29,8 @@ function App() {
                     <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
                     <Route path="/cursos" element={<PrivateRoute><Cursos /></PrivateRoute>} />
                     <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />
+                    <Route path="/tareas" element={<PrivateRoute><Tareas /></PrivateRoute>} />
+                    <Route path="/fijas" element={<PrivateRoute><Fijas /></PrivateRoute>} />
                 </Routes>
             </div>
             {!hideMenuFooter && <Footer />}
