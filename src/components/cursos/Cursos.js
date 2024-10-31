@@ -1,5 +1,5 @@
-// Cursos.js
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TarjetaCurso from './TarjetaCurso';
 import { apiRequest, confirmarAccion } from '../general/comun';
 import Swal from 'sweetalert2';
@@ -10,6 +10,7 @@ function Cursos() {
   const [todosLosCursos, setTodosLosCursos] = useState([]);
   const [error, setError] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const navigate = useNavigate(); // Para la navegación
 
   const obtenerCursosUsuario = async () => {
     try {
@@ -53,11 +54,10 @@ function Cursos() {
     }
   };
 
-  // Desasignar un curso del usuario
   const desasignarCurso = async (cursoUsuarioId) => {
     const confirmacion = await confirmarAccion(
       "¿Estás seguro de eliminar este curso?",
-      "No podrás deshacer esta acción"
+      "Esta acción no se puede deshacer y eliminará todas las tareas relacionadas con este curso."
     );
     if (!confirmacion) return;
 
@@ -96,6 +96,7 @@ function Cursos() {
             titulo={cursoUsuario.curso.nombre}
             descripcion={cursoUsuario.curso.descripcion || 'No hay descripción disponible'}
             onEliminar={() => desasignarCurso(cursoUsuario.id)}
+            onVerTareas={() => navigate(`/cursos/${cursoUsuario.curso.id}/tareas`)} // Navega a las tareas del curso
           />
         ))}
       </div>

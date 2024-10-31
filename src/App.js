@@ -9,6 +9,7 @@ import HomePage from './HomePage';
 import Cursos from './components/cursos/Cursos';
 import Horarios from './components/horarios/Horarios';
 import Tareas from './components/tareas/tareas';
+import TareasCurso  from './components/tareas/tareasCurso';
 import Login from './components/usuario/LoginRegister';
 import PrivateRoute from './components/usuario/PrivateRoute';
 import Fijas from './components/ayuda/fijas';
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />
                     <Route path="/tareas" element={<PrivateRoute><Tareas /></PrivateRoute>} />
                     <Route path="/fijas" element={<PrivateRoute><Fijas /></PrivateRoute>} />
+                    <Route path="/cursos/:cursoId/tareas" element={<TareasCurso />} />
                 </Routes>
             </div>
             {!hideMenuFooter && <Footer />}

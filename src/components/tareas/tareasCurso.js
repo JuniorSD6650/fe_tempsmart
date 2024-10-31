@@ -1,39 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Grid, Autocomplete } from '@mui/material';
 import { apiRequest, getTodayDate } from '../general/comun';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import iconMapping from '../general/iconMapping';
 
-const Tareas = () => {
+const TareasCurso = () => {
+    const { cursoId } = useParams(); // Obtiene el cursoId desde la URL
     const [tareas, setTareas] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
-    const [nuevaTarea, setNuevaTarea] = useState({ titulo: '', descripcion: '', fecha_vencimiento: getTodayDate(), curso: null, icono: null });
-    const [cursos, setCursos] = useState([]);
+    const [nuevaTarea, setNuevaTarea] = useState({ titulo: '', descripcion: '', fecha_vencimiento: getTodayDate(), curso: cursoId, icono: null });
     const [iconos, setIconos] = useState([]);
 
     useEffect(() => {
         obtenerTareas();
-        obtenerCursos();
         obtenerIconos();
-    }, []);
+    }, [cursoId]); 
 
     const obtenerTareas = async () => {
         try {
-            const data = await apiRequest({ endpoint: '/tareas/', method: 'GET' });
+            const data = await apiRequest({ endpoint: `/tareas-curso/${cursoId}/`, method: 'GET' });
             setTareas(data);
         } catch (error) {
             console.error('Error al cargar tareas:', error);
-        }
-    };
-
-    const obtenerCursos = async () => {
-        try {
-            const data = await apiRequest({ endpoint: '/cursos-usuario/', method: 'GET' });
-            setCursos(data);
-        } catch (error) {
-            console.error('Error al cargar cursos:', error);
         }
     };
 
@@ -48,8 +39,6 @@ const Tareas = () => {
 
     const abrirModalEdicion = (tarea = null) => {
         if (tarea) {
-            // Modo edición
-            const cursoSeleccionado = cursos.find((curso) => curso.id === tarea.curso) || null;
             const iconoSeleccionado = iconos.find((icono) => icono.id === tarea.icono) || null;
 
             setTareaSeleccionada(tarea);
@@ -57,7 +46,7 @@ const Tareas = () => {
                 titulo: tarea.titulo,
                 descripcion: tarea.descripcion,
                 fecha_vencimiento: tarea.fecha_vencimiento,
-                curso: cursoSeleccionado,
+                curso: cursoId,
                 icono: iconoSeleccionado,
             });
         } else {
@@ -65,7 +54,7 @@ const Tareas = () => {
                 titulo: '',
                 descripcion: '',
                 fecha_vencimiento: getTodayDate(),
-                curso: null,
+                curso: cursoId,
                 icono: null,
             });
         }
@@ -79,7 +68,7 @@ const Tareas = () => {
             titulo: '',
             descripcion: '',
             fecha_vencimiento: getTodayDate(),
-            curso: null,
+            curso: cursoId,
             icono: null
         });
     };
@@ -94,7 +83,7 @@ const Tareas = () => {
         try {
             const tareaParaGuardar = {
                 ...nuevaTarea,
-                curso: nuevaTarea.curso ? nuevaTarea.curso.id : null,
+                curso: cursoId, // Asegura que el curso seleccionado sea el curso actual
                 icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
             };
 
@@ -136,7 +125,7 @@ const Tareas = () => {
 
     return (
         <div className="container">
-            <h1>Mis Tareas</h1>
+            <h1>Tareas del Curso</h1>
             <Button variant="contained" color="primary" onClick={() => abrirModalEdicion()} className="mb-4">
                 Asignar Nueva Tarea
             </Button>
@@ -156,10 +145,7 @@ const Tareas = () => {
                                         {tarea.titulo}
                                     </h5>
                                     <p className="card-text">{tarea.descripcion}</p>
-                                    <p className="text-muted" style={{ fontSize: '0.9rem', color: '#6c757d' }}>
-                                        Curso: {tarea.curso_nombre}
-                                    </p>
-                                    <p lassName="text-muted">Fecha de vencimiento: {tarea.fecha_vencimiento}</p>
+                                    <p className="text-muted">Fecha de vencimiento: {tarea.fecha_vencimiento}</p>
                                     <Button variant="outlined" className="me-2" onClick={() => abrirModalEdicion(tarea)}>
                                         Editar
                                     </Button>
@@ -208,15 +194,6 @@ const Tareas = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Autocomplete
-                                options={cursos}
-                                getOptionLabel={(curso) => curso.curso.nombre}
-                                renderInput={(params) => <TextField {...params} label="Selecciona un curso" variant="outlined" />}
-                                onChange={(event, selectedCurso) => setNuevaTarea({ ...nuevaTarea, curso: selectedCurso || null })}
-                                value={nuevaTarea.curso || null} // Usa el objeto completo en lugar del ID
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Autocomplete
                                 options={iconos}
                                 getOptionLabel={(icono) => icono.nombre}
                                 renderOption={(props, option) => {
@@ -230,7 +207,7 @@ const Tareas = () => {
                                 }}
                                 renderInput={(params) => <TextField {...params} label="Selecciona un icono" variant="outlined" />}
                                 onChange={(event, selectedIcono) => setNuevaTarea({ ...nuevaTarea, icono: selectedIcono || null })}
-                                value={nuevaTarea.icono || null} // Asegúrate de que el valor sea el objeto completo
+                                value={nuevaTarea.icono || null}
                             />
                         </Grid>
                     </Grid>
@@ -248,4 +225,4 @@ const Tareas = () => {
     );
 };
 
-export default Tareas;
+export default TareasCurso;

@@ -2,6 +2,7 @@
 import Swal from 'sweetalert2';
 
 export const API_BASE_URL = 'http://127.0.0.1:8000/api';
+//export const API_BASE_URL = 'https://mi-backend.loca.lt/api';
 
 // Función para obtener el token del localStorage
 export const getToken = () => localStorage.getItem('token');
@@ -64,4 +65,12 @@ export const confirmarAccion = async (titulo = "¿Estás seguro?", texto = "No p
         cancelButtonText: 'Cancelar'
     });
     return result.isConfirmed;
+};
+
+export const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
