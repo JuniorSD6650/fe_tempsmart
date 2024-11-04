@@ -1,0 +1,83 @@
+/* HorariosCalendario.css */
+
+.calendario-contenedor {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .rbc-calendar {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .rbc-time-view .rbc-time-slot {
+    border-top: 1px solid #eee;
+  }
+  
+  .rbc-event {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff; /* Blanco por defecto */
+  }
+  
+  /* Ajuste de color de texto en función del fondo del evento */
+  .rbc-event[data-resource-color="#f00"] {
+    color: #fff;
+  }
+  .rbc-event[data-resource-color="#0f0"],
+  .rbc-event[data-resource-color="#ff0"] {
+    color: #333; /* Texto oscuro en fondos claros */
+  }
+  
+  .rbc-event:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .rbc-time-header {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+  
+    .rbc-time-header-content {
+      min-width: 600px; /* Ajusta este valor según tus necesidades */
+    }
+  
+    .rbc-time-content {
+      overflow-x: auto;
+    }
+  
+    .rbc-day-slot {
+      min-width: 100px; /* Ancho mínimo para cada día */
+    }
+  
+    .rbc-time-content > * + * > * {
+      min-width: 100px;
+    }
+  
+    .rbc-timeslot-group {
+      min-height: 50px; /* Ajusta la altura de las celdas de tiempo */
+    }
+  }
+  
+  /* Asegurar que el texto sea de color negro */
+  span {
+    color: #000 !important;
+  }
+  
+  /* Asegurar que el texto de .rbc-agenda-date-cell sea oscuro */
+  .rbc-agenda-date-cell {
+    color: #000 !important;
+  }
+  .rbc-events-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  

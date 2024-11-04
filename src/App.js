@@ -7,7 +7,7 @@ import './App.css';
 
 import HomePage from './HomePage';
 import Cursos from './components/cursos/Cursos';
-import Horarios from './components/horarios/Horarios';
+import Horarios from './components/horarios/horario';
 import Tareas from './components/tareas/tareas';
 import TareasCurso  from './components/tareas/tareasCurso';
 import Login from './components/usuario/LoginRegister';

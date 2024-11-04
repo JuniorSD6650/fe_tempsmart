@@ -1,0 +1,48 @@
+/* HorariosTabla.css */
+
+.tabla-contenedor {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* Ajusta este valor según necesites */
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  text-align: center;
+  height: 60px;
+  color: black;
+  min-width: 120px; /* Asegura que las columnas tengan un ancho mínimo */
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+td[rowspan] {
+  color: #fff;
+}
+
+td {
+  background-color: #fff;
+}
+
+@media (max-width: 768px) {
+  th,
+  td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  th {
+    font-size: 14px;
+  }
+
+  td div {
+    font-size: 12px;
+  }
+}

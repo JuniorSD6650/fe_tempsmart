@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Typography, Divider, Grid, List, ListItem, ListItemText, Box } from '@mui/material';
+import { Card, Typography, Divider, Grid, List, ListItem, ListItemText, Box } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const cursosData = [
