@@ -184,7 +184,7 @@ const TareasComponent = ({ fixedCursoId }) => {
                                     <Button variant="outlined" className="me-2" onClick={() => abrirModalEdicion(tarea)}>
                                         Editar
                                     </Button>
-                                    <Button variant="contained" color="secondary" onClick={() => eliminarTarea(tarea.id)}>
+                                    <Button variant="contained" className="bg-danger" onClick={() => eliminarTarea(tarea.id)}>
                                         Eliminar
                                     </Button>
                                 </div>

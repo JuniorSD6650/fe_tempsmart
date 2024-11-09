@@ -9,7 +9,7 @@ const TarjetaCurso = ({ titulo, descripcion, onEliminar, onVerTareas }) => (
       <Button variant="primary" onClick={onVerTareas} className="mb-2">
         Ver Tareas
       </Button>
-      <Button variant="danger" onClick={onEliminar} className="mt-auto">
+      <Button variant="danger" onClick={onEliminar} className="mt-auto bg-danger">
         Eliminar
       </Button>
     </Card.Body>
