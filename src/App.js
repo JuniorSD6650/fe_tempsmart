@@ -12,7 +12,9 @@ import Tareas from './components/tareas/tareas';
 import TareasCurso  from './components/tareas/tareasCurso';
 import Login from './components/usuario/LoginRegister';
 import PrivateRoute from './components/usuario/PrivateRoute';
-import Fijas from './components/ayuda/fijas';
+import Fijas from './components/ayuda//apuntes/fijas';
+import Planos from './components/ayuda//croquis/planos';
+import PlanosHorario from './components/ayuda//croquis/planosHorario';
 
 
 function App() {
@@ -32,7 +34,9 @@ function App() {
                     <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />
                     <Route path="/tareas" element={<PrivateRoute><Tareas /></PrivateRoute>} />
                     <Route path="/fijas" element={<PrivateRoute><Fijas /></PrivateRoute>} />
+                    <Route path="/croquis" element={<PrivateRoute><Planos /></PrivateRoute>} />
                     <Route path="/cursos/:cursoId/tareas" element={<TareasCurso />} />
+                    <Route path="/horarios/:paSa/croquis" element={<PlanosHorario />} />
                 </Routes>
             </div>
             {!hideMenuFooter && <Footer />}
