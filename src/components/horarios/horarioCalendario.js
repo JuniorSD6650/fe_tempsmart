@@ -90,7 +90,7 @@ function HorariosCalendario({ horariosData }) {
           },
         })}
         tooltipAccessor={(event) => `${event.resource.docente} - ${event.resource.aula}`}
-        min={moment().set({ hour: 7, minute: 0 }).toDate()}
+        min={moment().set({ hour: 6, minute: 0 }).toDate()}
         max={moment().set({ hour: 22, minute: 0 }).toDate()}
         step={60}
         timeslots={1}

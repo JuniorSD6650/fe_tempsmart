@@ -1,86 +1,52 @@
-// HorariosTabla.jsx
 import React from 'react';
 import '../../css/HorariosTabla.css';
 
 function HorariosTabla({ horariosData }) {
-  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-  const horas = [
-    '08:00', '09:00', '10:00', '11:00', '12:00',
-    '13:00', '14:00', '15:00', '16:00', '17:00',
-  ];
+  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-  const renderizado = {};
-
-  const obtenerClase = (dia, hora) => {
-    return horariosData.find((clase) => {
-      if (clase.dia !== dia) return false;
-      const horaInicioClase = parseInt(clase.horaInicio.replace(':', ''), 10);
-      const horaFinClase = parseInt(clase.horaFin.replace(':', ''), 10);
-      const horaActual = parseInt(hora.replace(':', ''), 10);
-      return horaActual >= horaInicioClase && horaActual < horaFinClase;
-    });
-  };
+  // Agrupar los horarios por día y ordenar por hora de inicio
+  const horariosPorDia = diasSemana.map((dia) => ({
+    dia,
+    clases: horariosData
+      .filter((clase) => clase.dia === dia)
+      .sort((a, b) => parseInt(a.horaInicio.replace(':', ''), 10) - parseInt(b.horaInicio.replace(':', ''), 10)),
+  }));
 
   return (
-    <div>
-      <div className="tabla-contenedor">
-        <table>
-          <thead>
-            <tr>
-              <th>Hora</th>
-              {diasSemana.map((dia) => (
-                <th key={dia}>{dia}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {horas.map((hora) => (
-              <tr key={hora}>
-                <td>{hora}</td>
-                {diasSemana.map((dia) => {
-                  const clave = `${dia}-${hora}`;
-                  if (renderizado[clave]) {
-                    return null;
-                  }
-
-                  const clase = obtenerClase(dia, hora);
-                  if (clase) {
-                    const horaInicioClase = parseInt(clase.horaInicio.replace(':', ''), 10);
-                    const horaFinClase = parseInt(clase.horaFin.replace(':', ''), 10);
-                    const duracion = (horaFinClase - horaInicioClase) / 100;
-
-                    for (let i = 0; i < duracion; i++) {
-                      const horaRenderizada =
-                        ('0' + (parseInt(hora.substring(0, 2), 10) + i)).slice(-2) + ':00';
-                      const claveRenderizada = `${dia}-${horaRenderizada}`;
-                      renderizado[claveRenderizada] = true;
-                    }
-
-                    return (
-                      <td
-                        key={`${hora}-${dia}`}
-                        rowSpan={duracion}
-                        style={{ backgroundColor: clase.color, color: '#fff' }}
-                      >
-                        <div>
-                          <strong>{clase.curso}</strong>
-                          <br />
-                          <small>{clase.docente}</small>
-                          <br />
-                          <small>{clase.aula}</small>
-                        </div>
-                      </td>
-                    );
-                  } else {
-                    renderizado[clave] = true;
-                    return <td key={`${hora}-${dia}`}></td>;
-                  }
-                })}
-              </tr>
+    <div className="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            {diasSemana.map((dia) => (
+              <th key={dia}>{dia}</th>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {horariosPorDia.map((dia) => (
+              <td key={dia.dia} className="dia-column">
+                {dia.clases.length > 0 ? (
+                  dia.clases.map((clase, index) => (
+                    <div
+                      key={index}
+                      className="clase-item"
+                      style={{ backgroundColor: clase.color, color: '#fff', margin: '5px', padding: '10px', borderRadius: '5px' }}
+                    >
+                      <strong>{clase.curso}</strong>
+                      <div>{clase.horaInicio} - {clase.horaFin}</div>
+                      <div>{clase.aula}</div>
+                      <div>{clase.docente}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ color: '#888', textAlign: 'center' }}>No hay clases</div>
+                )}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

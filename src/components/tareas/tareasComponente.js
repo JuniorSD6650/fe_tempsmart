@@ -242,12 +242,15 @@ const TareasComponent = ({ fixedCursoId }) => {
                             <Autocomplete
                                 options={iconos}
                                 getOptionLabel={(icono) => icono.nombre}
-                                renderOption={(props, option) => (
-                                    <li {...props} style={{ display: 'flex', alignItems: 'center' }}>
-                                        {iconMapping[option.imagen] && React.createElement(iconMapping[option.imagen], { fontSize: 'small', style: { marginRight: 8 } })}
-                                        {option.nombre}
-                                    </li>
-                                )}
+                                renderOption={(props, option) => {
+                                    const { key, ...rest } = props; 
+                                    return (
+                                        <li key={key} {...rest} style={{ display: 'flex', alignItems: 'center' }}>
+                                            {iconMapping[option.imagen] && React.createElement(iconMapping[option.imagen], { fontSize: 'small', style: { marginRight: 8 } })}
+                                            {option.nombre}
+                                        </li>
+                                    );
+                                }}
                                 renderInput={(params) => <TextField {...params} label="Selecciona un icono" variant="outlined" />}
                                 onChange={(event, selectedIcono) => setNuevaTarea({ ...nuevaTarea, icono: selectedIcono || null })}
                                 value={nuevaTarea.icono || null}

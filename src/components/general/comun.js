@@ -36,6 +36,13 @@ export const apiRequest = async ({ endpoint, method = 'GET', body = null }) => {
         const url = `${API_BASE_URL}${endpoint}`;
         const response = await fetch(url, options);
 
+        // Si el token es inválido o ha expirado, redirige al login
+        if (response.status === 401) {
+            removeToken();  // Elimina el token del almacenamiento local
+            window.location.href = '/login';  // Redirige al login
+            return;
+        }
+
         // Si la respuesta es 204 No Content, devolver null o un objeto vacío
         if (response.status === 204) {
             return null;  // o `return {}` si prefieres un objeto vacío

@@ -3,7 +3,7 @@ import React from 'react';
 import '../../css/HorariosLista.css';
 
 function HorariosLista({ horariosData }) {
-  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   return (
     <div>

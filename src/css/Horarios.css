@@ -1,7 +1,6 @@
 /* Horarios.css */
 
 h1 {
-  text-align: center;
   margin-bottom: 20px;
 }
 
@@ -27,4 +26,10 @@ button:focus {
 .button-container {
   text-align: center;
   margin-bottom: 20px;
+}
+
+#tx_vista{
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
 }
