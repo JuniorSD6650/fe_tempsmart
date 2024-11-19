@@ -4,11 +4,11 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  color: white;
+  color: black;
 }
 
 .App {
-  background: linear-gradient(to right, #2C3E50, #1ABC9C);
+  background: linear-gradient(to right, #fff, #f3f3f3);
   /* Fondo en degradado */
   min-height: 100vh;
   /* Asegura que el fondo cubra toda la altura */
@@ -36,7 +36,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .App-link {
@@ -62,12 +62,12 @@ body {
 
 .no-background {
   background: none;
-  color: white !important;
+  color: black !important;
 }
 
 .footer {
   background-color: #2C3E50;
-  color: white;
+  color: black;
   text-align: center;
   padding: 1rem;
   width: 100%;
@@ -83,6 +83,6 @@ p.card-text {
   color: black !important;
 }
 
-.text_white {
-  color: white !important;
+.text_black {
+  color: black !important;
 }

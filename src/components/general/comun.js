@@ -1,26 +1,27 @@
-// comun.js
 import Swal from 'sweetalert2';
 
 export const API_BASE_URL = 'http://127.0.0.1:8000/api';
-//export const API_BASE_URL = 'https://mi-backend.loca.lt/api';
 
-// Función para obtener el token del localStorage
 export const getToken = () => localStorage.getItem('token');
-
-// Función para guardar el token en el localStorage
 export const setToken = (token) => localStorage.setItem('token', token);
-
-// Función para eliminar el token (para logout, por ejemplo)
 export const removeToken = () => localStorage.removeItem('token');
 
-// comun.js
+export const getUsuarioActual = async () => {
+    try {
+        const response = await apiRequest({ endpoint: '/usuarios/me/', method: 'GET' });
+        return response; // Devuelve la información del usuario
+    } catch (error) {
+        console.error('Error al obtener el usuario actual:', error);
+        return null;
+    }
+};
 
 export const apiRequest = async ({ endpoint, method = 'GET', body = null }) => {
     try {
         const headers = {
             'Content-Type': 'application/json',
         };
-        
+
         const token = getToken();
         if (token) headers['Authorization'] = `Token ${token}`;
 
@@ -36,21 +37,19 @@ export const apiRequest = async ({ endpoint, method = 'GET', body = null }) => {
         const url = `${API_BASE_URL}${endpoint}`;
         const response = await fetch(url, options);
 
-        // Si el token es inválido o ha expirado, redirige al login
         if (response.status === 401) {
-            removeToken();  // Elimina el token del almacenamiento local
-            window.location.href = '/login';  // Redirige al login
-            return;
+            removeToken();
+            window.location.href = '/login';
+            return null;
         }
 
-        // Si la respuesta es 204 No Content, devolver null o un objeto vacío
-        if (response.status === 204) {
-            return null;  // o `return {}` si prefieres un objeto vacío
-        }
-
-        // Verificar si la respuesta fue exitosa
         if (!response.ok) {
             throw new Error('Error en la solicitud');
+        }
+
+        // Manejo de respuestas vacías (204 No Content)
+        if (response.status === 204) {
+            return null; // O devuelve un objeto vacío si prefieres: return {};
         }
 
         return await response.json();

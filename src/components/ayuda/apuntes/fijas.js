@@ -1,64 +1,58 @@
-import React from 'react';
-import { Card, Typography, Divider, Grid, List, ListItem, ListItemText, Box } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-const cursosData = [
-    { nombre: 'Lenguaje I', descripcion: 'Curso general sobre habilidades de lenguaje.' },
-    { nombre: 'Matemática Básica I', descripcion: 'Curso introductorio de matemáticas básicas.' },
-    { nombre: 'Métodos y Técnicas de Estudio', descripcion: 'Curso sobre métodos y técnicas para mejorar el estudio.' },
-    { nombre: 'Psicología General', descripcion: 'Curso introductorio a la psicología.' },
-    { nombre: 'Introducción a la Ingeniería de Sistemas e Informática', descripcion: 'Curso introductorio a la ingeniería de sistemas.' },
-    { nombre: 'Ética y Liderazgo', descripcion: 'Curso sobre principios éticos y liderazgo.' },
-    { nombre: 'Lenguaje II', descripcion: 'Curso avanzado sobre habilidades de lenguaje.' },
-    { nombre: 'Matemática Básica II', descripcion: 'Curso avanzado de matemáticas básicas.' },
-    { nombre: 'Ecología y Protección del Medio Ambiente', descripcion: 'Curso sobre ecología y protección ambiental.' },
-    { nombre: 'Sociología General', descripcion: 'Curso introductorio a la sociología.' },
-];
-
-const preguntasEjemplo = [
-    '¿Cuáles son los principios básicos de este curso?',
-    'Explica los conceptos clave y sus aplicaciones.',
-    'Desarrolla un ejemplo práctico para aplicar lo aprendido.',
-    'Describe la importancia de este tema en la vida cotidiana.',
-    '¿Cómo se relaciona este tema con otras disciplinas?'
-];
+import React, { useState, useEffect } from 'react';
+import { Card, Typography, Divider, Grid, Box, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { apiRequest } from '../../general/comun';
 
 const Fijas = () => {
+    const [publicaciones, setPublicaciones] = useState([]);
+
+    useEffect(() => {
+        apiRequest({ endpoint: '/publicaciones/' })
+            .then(setPublicaciones)
+            .catch((error) => console.error('Error al cargar publicaciones:', error));
+    }, []);
+
     return (
         <div className="container">
-            <h1>Preguntas Fijas de Examen</h1>
+            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Publicaciones del Administrador</h1>
             <Divider className="mb-4" />
 
             <Grid container spacing={4} justifyContent="center">
-                {cursosData.map((curso, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card 
+                {publicaciones.map((publicacion) => (
+                    <Grid item xs={12} sm={8} md={6} key={publicacion.id}>
+                        <Card
                             sx={{
-                                height: '100%',
-                                padding: 2,
-                                boxShadow: 3,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                backgroundColor: '#F9F9F9',
-                                borderRadius: '8px',
+                                padding: 3,
+                                boxShadow: 4,
+                                backgroundColor: '#F3F4F6',
+                                borderRadius: '12px',
                             }}
                         >
                             <Box>
-                                <Typography variant="h5" gutterBottom sx={{ color: '#34495E', fontWeight: 'medium' }}>
-                                    {curso.nombre}
+                                <Typography
+                                    variant="h5"
+                                    gutterBottom
+                                    sx={{ color: '#2C3E50', fontWeight: 'bold', marginBottom: '10px' }}
+                                >
+                                    {publicacion.titulo}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary" gutterBottom>
-                                    {curso.descripcion}
+                                <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                    sx={{ marginBottom: '15px', lineHeight: 1.6 }}
+                                >
+                                    {publicacion.contenido.slice(0, 100)}... {/* Resumen */}
                                 </Typography>
-                                <Divider className="my-3" />
-                                <List dense>
-                                    {preguntasEjemplo.map((pregunta, idx) => (
-                                        <ListItem key={idx} disableGutters>
-                                            <ListItemText primary={`• ${pregunta}`} />
-                                        </ListItem>
-                                    ))}
-                                </List>
+                                <Divider sx={{ margin: '15px 0' }} />
+                                <Button
+                                    component={Link}
+                                    to={`/publicaciones/${publicacion.id}`}
+                                    variant="contained"
+                                    size="small"
+                                    sx={{ backgroundColor: '#2ECC71' }}
+                                >
+                                    Ver más
+                                </Button>
                             </Box>
                         </Card>
                     </Grid>

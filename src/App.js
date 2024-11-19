@@ -15,7 +15,7 @@ import PrivateRoute from './components/usuario/PrivateRoute';
 import Fijas from './components/ayuda//apuntes/fijas';
 import Planos from './components/ayuda//croquis/planos';
 import PlanosHorario from './components/ayuda//croquis/planosHorario';
-
+import PublicacionDetalle from './components/ayuda/apuntes/publicacionDetalle';
 
 function App() {
     const location = useLocation();
@@ -34,6 +34,7 @@ function App() {
                     <Route path="/horarios" element={<PrivateRoute><Horarios /></PrivateRoute>} />
                     <Route path="/tareas" element={<PrivateRoute><Tareas /></PrivateRoute>} />
                     <Route path="/fijas" element={<PrivateRoute><Fijas /></PrivateRoute>} />
+                    <Route path="/publicaciones/:id" element={<PublicacionDetalle />} />
                     <Route path="/croquis" element={<PrivateRoute><Planos /></PrivateRoute>} />
                     <Route path="/cursos/:cursoId/tareas" element={<TareasCurso />} />
                     <Route path="/horarios/:paSa/croquis" element={<PlanosHorario />} />

@@ -1,6 +1,6 @@
-// HorariosLista.jsx
 import React from 'react';
 import '../../css/HorariosLista.css';
+import { Link } from 'react-router-dom';
 
 function HorariosLista({ horariosData }) {
   const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -28,7 +28,11 @@ function HorariosLista({ horariosData }) {
                       <br />
                       <small>{clase.docente}</small>
                       <br />
-                      <small>{clase.aula}</small>
+                      <small>
+                        <Link to={`/horarios/${clase.aula}/croquis`}>
+                          {clase.aula}
+                        </Link>
+                      </small>
                     </div>
                   </li>
                 ))}

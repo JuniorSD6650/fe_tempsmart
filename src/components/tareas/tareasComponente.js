@@ -13,7 +13,7 @@ const TareasComponent = ({ fixedCursoId }) => {
         titulo: '',
         descripcion: '',
         fecha_vencimiento: getTodayDate(),
-        curso: fixedCursoId ? fixedCursoId : null,
+        curso: '',
         icono: null
     });
     const [cursos, setCursos] = useState([]);
@@ -59,18 +59,16 @@ const TareasComponent = ({ fixedCursoId }) => {
     const abrirModalEdicion = (tarea = null) => {
         if (tarea) {
             const iconoSeleccionado = iconos.find((icono) => icono.id === tarea.icono) || null;
-            let cursoSeleccionado = null;
-            if (!fixedCursoId) {
-                // Ajuste aquí: comparar curso.id con tarea.curso
-                cursoSeleccionado = cursos.find((curso) => curso.id === tarea.curso) || null;
-            }
+
+            // Buscar CursoUsuario basado en tarea.curso
+            const cursoSeleccionado = cursos.find((cursoUsuario) => cursoUsuario.id === tarea.curso) || null;
 
             setTareaSeleccionada(tarea);
             setNuevaTarea({
                 titulo: tarea.titulo,
                 descripcion: tarea.descripcion,
                 fecha_vencimiento: tarea.fecha_vencimiento,
-                curso: cursoSeleccionado,
+                curso: cursoSeleccionado, // Aquí usamos el CursoUsuario directamente
                 icono: iconoSeleccionado,
             });
         } else {
@@ -78,7 +76,7 @@ const TareasComponent = ({ fixedCursoId }) => {
                 titulo: '',
                 descripcion: '',
                 fecha_vencimiento: getTodayDate(),
-                curso: fixedCursoId ? fixedCursoId : null,
+                curso: null,
                 icono: null,
             });
         }
@@ -104,19 +102,19 @@ const TareasComponent = ({ fixedCursoId }) => {
             Swal.fire('Error', 'La fecha de vencimiento no puede ser anterior a la fecha actual.', 'error');
             return;
         }
-
-        if (!fixedCursoId && !nuevaTarea.curso) {
+    
+        if (!nuevaTarea.curso) {
             Swal.fire('Error', 'Debes seleccionar un curso.', 'error');
             return;
         }
-
+    
         try {
             const tareaParaGuardar = {
                 ...nuevaTarea,
-                curso: fixedCursoId ? fixedCursoId : (nuevaTarea.curso ? nuevaTarea.curso.id : null),
+                curso: nuevaTarea.curso.id, // Asegurarte de que el ID de CursoUsuario se envíe
                 icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
             };
-
+    
             if (tareaSeleccionada) {
                 await apiRequest({
                     endpoint: `/tareas/${tareaSeleccionada.id}/`,
@@ -138,8 +136,8 @@ const TareasComponent = ({ fixedCursoId }) => {
             cerrarModal();
             Swal.fire('Error', 'Hubo un error al guardar la tarea.', 'error');
         }
-    };
-
+    };    
+    
     const eliminarTarea = async (tareaId) => {
         try {
             await apiRequest({
@@ -243,7 +241,7 @@ const TareasComponent = ({ fixedCursoId }) => {
                                 options={iconos}
                                 getOptionLabel={(icono) => icono.nombre}
                                 renderOption={(props, option) => {
-                                    const { key, ...rest } = props; 
+                                    const { key, ...rest } = props;
                                     return (
                                         <li key={key} {...rest} style={{ display: 'flex', alignItems: 'center' }}>
                                             {iconMapping[option.imagen] && React.createElement(iconMapping[option.imagen], { fontSize: 'small', style: { marginRight: 8 } })}

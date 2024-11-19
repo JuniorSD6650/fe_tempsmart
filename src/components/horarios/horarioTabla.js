@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../../css/HorariosTabla.css';
 
 function HorariosTabla({ horariosData }) {
@@ -31,11 +32,24 @@ function HorariosTabla({ horariosData }) {
                     <div
                       key={index}
                       className="clase-item"
-                      style={{ backgroundColor: clase.color, color: '#fff', margin: '5px', padding: '10px', borderRadius: '5px' }}
+                      style={{
+                        backgroundColor: clase.color,
+                        color: '#000',
+                        margin: '5px',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '5px' // Añade un espacio uniforme entre los elementos
+                      }}
                     >
                       <strong>{clase.curso}</strong>
                       <div>{clase.horaInicio} - {clase.horaFin}</div>
-                      <div>{clase.aula}</div>
+                      <div>
+                        <Link to={`/horarios/${clase.aula}/croquis`} style={{ color: '#000', textDecoration: 'underline' }}>
+                          {clase.aula}
+                        </Link>
+                      </div>
                       <div>{clase.docente}</div>
                     </div>
                   ))

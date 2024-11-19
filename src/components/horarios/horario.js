@@ -126,9 +126,16 @@ function Horarios() {
     <div>
       <div className="d-flex">
         <h1 className='me-3'>Horarios</h1>
-        <Button variant="contained" color="primary" onClick={abrirModal} className="btn btn-primary rounded-circle">
-          <AddCircleOutlineIcon />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={abrirModal}
+          className="btn btn-primary"
+        >
+          Nuevo
+          <AddCircleOutlineIcon style={{ marginLeft: '8px' }} />
         </Button>
+
       </div>
       <p id='tx_vista'>VISTAS</p>
       <div className="button-container">

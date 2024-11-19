@@ -1,7 +1,7 @@
-// HorariosCalendario.jsx
 import React from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/HorariosCalendario.css';
@@ -9,6 +9,7 @@ import '../../css/HorariosCalendario.css';
 function HorariosCalendario({ horariosData }) {
   moment.locale('es');
   const localizer = momentLocalizer(moment);
+  const navigate = useNavigate();
 
   const diasSemanaMap = {
     'Lunes': 1,
@@ -68,6 +69,10 @@ function HorariosCalendario({ horariosData }) {
     showMore: (total) => `+ Ver más (${total})`,
   };
 
+  const handleEventSelect = (event) => {
+    navigate(`/horarios/${event.resource.aula}/croquis`);
+  };
+
   return (
     <div className="calendario-contenedor">
       <Calendar
@@ -96,6 +101,7 @@ function HorariosCalendario({ horariosData }) {
         timeslots={1}
         culture="es"
         dayLayoutAlgorithm="no-overlap"
+        onSelectEvent={handleEventSelect}
       />
     </div>
   );
