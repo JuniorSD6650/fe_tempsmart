@@ -18,6 +18,7 @@ const TareasComponent = ({ fixedCursoId }) => {
     });
     const [cursos, setCursos] = useState([]);
     const [iconos, setIconos] = useState([]);
+    const [reconocimientoActivo, setReconocimientoActivo] = useState(false);
 
     const obtenerTareas = useCallback(async () => {
         try {
@@ -60,7 +61,6 @@ const TareasComponent = ({ fixedCursoId }) => {
         if (tarea) {
             const iconoSeleccionado = iconos.find((icono) => icono.id === tarea.icono) || null;
 
-            // Buscar CursoUsuario basado en tarea.curso
             const cursoSeleccionado = cursos.find((cursoUsuario) => cursoUsuario.id === tarea.curso) || null;
 
             setTareaSeleccionada(tarea);
@@ -68,7 +68,7 @@ const TareasComponent = ({ fixedCursoId }) => {
                 titulo: tarea.titulo,
                 descripcion: tarea.descripcion,
                 fecha_vencimiento: tarea.fecha_vencimiento,
-                curso: cursoSeleccionado, // Aquí usamos el CursoUsuario directamente
+                curso: cursoSeleccionado,
                 icono: iconoSeleccionado,
             });
         } else {
@@ -102,19 +102,19 @@ const TareasComponent = ({ fixedCursoId }) => {
             Swal.fire('Error', 'La fecha de vencimiento no puede ser anterior a la fecha actual.', 'error');
             return;
         }
-    
+
         if (!nuevaTarea.curso) {
             Swal.fire('Error', 'Debes seleccionar un curso.', 'error');
             return;
         }
-    
+
         try {
             const tareaParaGuardar = {
                 ...nuevaTarea,
-                curso: nuevaTarea.curso.id, // Asegurarte de que el ID de CursoUsuario se envíe
+                curso: nuevaTarea.curso.id,
                 icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
             };
-    
+
             if (tareaSeleccionada) {
                 await apiRequest({
                     endpoint: `/tareas/${tareaSeleccionada.id}/`,
@@ -136,8 +136,8 @@ const TareasComponent = ({ fixedCursoId }) => {
             cerrarModal();
             Swal.fire('Error', 'Hubo un error al guardar la tarea.', 'error');
         }
-    };    
-    
+    };
+
     const eliminarTarea = async (tareaId) => {
         try {
             await apiRequest({
@@ -151,9 +151,44 @@ const TareasComponent = ({ fixedCursoId }) => {
         }
     };
 
+    // Función de reconocimiento de voz
+    const iniciarReconocimientoVoz = () => {
+        const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        reconocimiento.lang = 'es-ES';
+        reconocimiento.continuous = false;
+        reconocimiento.interimResults = false;
+
+        reconocimiento.onstart = () => setReconocimientoActivo(true);
+        reconocimiento.onend = () => setReconocimientoActivo(false);
+
+        reconocimiento.onresult = (event) => {
+            const descripcion = event.results[0][0].transcript;
+            setNuevaTarea({
+                ...nuevaTarea,
+                titulo: 'NOTA DE VOZ',
+                descripcion,
+                fecha_vencimiento: getTodayDate(),
+                icono: iconos.find(icono => icono.id === 7), // Icono ID 7
+                curso: fixedCursoId ? { id: fixedCursoId } : null // Si está en la vista por curso, asignamos el curso
+            });
+        };
+
+        reconocimiento.onerror = (event) => {
+            console.error('Error en el reconocimiento de voz:', event.error);
+            setReconocimientoActivo(false);
+        };
+
+        reconocimiento.start();
+    };
+
     return (
         <div className="container">
             <h1>{fixedCursoId ? 'Tareas del Curso' : 'Mis Tareas'}</h1>
+            {fixedCursoId && (
+                <Button variant="contained" color="primary" onClick={iniciarReconocimientoVoz} className="mb-4">
+                    <i className="bi bi-mic"></i> Asignar Tarea por Voz
+                </Button>
+            )}
             <Button variant="contained" color="primary" onClick={() => abrirModalEdicion()} className="mb-4">
                 Asignar Nueva Tarea
             </Button>
@@ -270,3 +305,4 @@ const TareasComponent = ({ fixedCursoId }) => {
 };
 
 export default TareasComponent;
+
