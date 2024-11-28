@@ -19,6 +19,7 @@ const TareasComponent = ({ fixedCursoId }) => {
     const [cursos, setCursos] = useState([]);
     const [iconos, setIconos] = useState([]);
     const [reconocimientoActivo, setReconocimientoActivo] = useState(false);
+    const [reconocimiento, setReconocimiento] = useState(null);  // Guardamos el objeto de reconocimiento
 
     const obtenerTareas = useCallback(async () => {
         try {
@@ -53,6 +54,139 @@ const TareasComponent = ({ fixedCursoId }) => {
         obtenerIconos();
         obtenerCursos();
     }, [obtenerTareas, obtenerCursos, obtenerIconos]);
+
+    useEffect(() => {
+        if (reconocimientoActivo) {
+            const reconocimientoInstancia = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            reconocimientoInstancia.lang = 'es-ES';
+            reconocimientoInstancia.continuous = false;
+            reconocimientoInstancia.interimResults = false;
+
+            reconocimientoInstancia.onstart = () => {
+                Swal.fire({
+                    title: 'Escuchando...',
+                    text: 'Por favor, diga algo para agregar como descripción de la tarea.',
+                    icon: 'info',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            };
+
+            reconocimientoInstancia.onend = () => {
+                setReconocimientoActivo(false);
+                Swal.fire({
+                    title: 'Finalizado',
+                    text: 'El reconocimiento de voz ha terminado.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            };
+
+            reconocimientoInstancia.onresult = (event) => {
+                const descripcion = event.results[0][0].transcript;
+                setNuevaTarea({
+                    ...nuevaTarea,
+                    titulo: 'NOTA DE VOZ',
+                    descripcion,
+                    fecha_vencimiento: getTodayDate(),
+                    icono: iconos.find(icono => icono.id === 7),
+                    curso: fixedCursoId ? { id: fixedCursoId } : null
+                });
+            };
+
+            reconocimientoInstancia.onerror = (event) => {
+                console.error('Error en el reconocimiento de voz:', event.error);
+                setReconocimientoActivo(false);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error durante el reconocimiento de voz. Por favor, inténtalo de nuevo.',
+                    icon: 'error',
+                });
+            };
+
+            setReconocimiento(reconocimientoInstancia);
+            reconocimientoInstancia.start();
+        } else if (reconocimiento) {
+            reconocimiento.stop();
+        }
+    }, [reconocimientoActivo, nuevaTarea, fixedCursoId, iconos]);
+
+    const iniciarReconocimientoVoz = () => {
+        if (reconocimientoActivo) {
+            // Si ya está activo, lo detenemos
+            reconocimiento.stop();
+            setReconocimientoActivo(false);
+            console.log("Tarea a guardar:", {
+                titulo: 'NOTA DE VOZ',
+                descripcion: nuevaTarea.descripcion,
+                fecha_vencimiento: nuevaTarea.fecha_vencimiento,
+                icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
+                curso: nuevaTarea.curso ? nuevaTarea.curso.id : null
+            });
+            Swal.fire({
+                title: 'Finalizado',
+                text: 'El reconocimiento de voz ha terminado.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        } else {
+            // Si no está activo, iniciamos el reconocimiento
+            const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            reconocimiento.lang = 'es-ES';
+            reconocimiento.continuous = false;
+            reconocimiento.interimResults = false;
+
+            reconocimiento.onstart = () => {
+                setReconocimientoActivo(true);
+                Swal.fire({
+                    title: 'Escuchando...',
+                    text: 'Por favor, diga algo para agregar como descripción de la tarea.',
+                    icon: 'info',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            };
+
+            reconocimiento.onend = () => {
+                setReconocimientoActivo(false);
+                Swal.fire({
+                    title: 'Finalizado',
+                    text: 'El reconocimiento de voz ha terminado.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            };
+
+            reconocimiento.onresult = (event) => {
+                const descripcion = event.results[0][0].transcript;
+                setNuevaTarea({
+                    ...nuevaTarea,
+                    titulo: 'NOTA DE VOZ',
+                    descripcion,
+                    fecha_vencimiento: getTodayDate(),
+                    icono: iconos.find(icono => icono.id === 7),
+                    curso: fixedCursoId ? { id: fixedCursoId } : null
+                });
+            };
+
+            reconocimiento.onerror = (event) => {
+                console.error('Error en el reconocimiento de voz:', event.error);
+                setReconocimientoActivo(false);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error durante el reconocimiento de voz. Por favor, inténtalo de nuevo.',
+                    icon: 'error',
+                });
+            };
+
+            // Iniciar el reconocimiento de voz
+            reconocimiento.start();
+        }
+    };
+
 
     const abrirModalEdicion = (tarea = null) => {
         if (tarea) {
@@ -103,7 +237,6 @@ const TareasComponent = ({ fixedCursoId }) => {
         let cursoUsuarioId;
 
         if (fixedCursoId) {
-            // Buscar el CursoUsuario correspondiente al fixedCursoId
             const cursoUsuario = cursos.find((curso) => curso.curso.id === parseInt(fixedCursoId));
 
             if (!cursoUsuario) {
@@ -111,9 +244,9 @@ const TareasComponent = ({ fixedCursoId }) => {
                 return;
             }
 
-            cursoUsuarioId = cursoUsuario.id; // ID de la relación CursoUsuario
+            cursoUsuarioId = cursoUsuario.id;
         } else if (nuevaTarea.curso) {
-            cursoUsuarioId = nuevaTarea.curso.id; // ID de la relación seleccionada en el formulario
+            cursoUsuarioId = nuevaTarea.curso.id;
         } else {
             Swal.fire('Error', 'Debes seleccionar un curso.', 'error');
             return;
@@ -122,7 +255,7 @@ const TareasComponent = ({ fixedCursoId }) => {
         try {
             const tareaParaGuardar = {
                 ...nuevaTarea,
-                curso: cursoUsuarioId, // ID de la relación CursoUsuario
+                curso: cursoUsuarioId,
                 icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
             };
 
@@ -162,60 +295,6 @@ const TareasComponent = ({ fixedCursoId }) => {
         }
     };
 
-    // Función de reconocimiento de voz
-    const iniciarReconocimientoVoz = () => {
-        const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        reconocimiento.lang = 'es-ES';
-        reconocimiento.continuous = false;
-        reconocimiento.interimResults = false;
-
-        reconocimiento.onstart = () => {
-            setReconocimientoActivo(true);
-            Swal.fire({
-                title: 'Escuchando...',
-                text: 'Por favor, diga algo para agregar como descripción de la tarea.',
-                icon: 'info',
-                timer: 2000,
-                showConfirmButton: false,
-            });
-        };
-
-        reconocimiento.onend = () => {
-            setReconocimientoActivo(false);
-            Swal.fire({
-                title: 'Finalizado',
-                text: 'El reconocimiento de voz ha terminado.',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false,
-            });
-        };
-
-        reconocimiento.onresult = (event) => {
-            const descripcion = event.results[0][0].transcript;
-            setNuevaTarea({
-                ...nuevaTarea,
-                titulo: 'NOTA DE VOZ',
-                descripcion,
-                fecha_vencimiento: getTodayDate(),
-                icono: iconos.find(icono => icono.id === 7),
-                curso: fixedCursoId ? { id: fixedCursoId } : null
-            });
-        };
-
-        reconocimiento.onerror = (event) => {
-            console.error('Error en el reconocimiento de voz:', event.error);
-            setReconocimientoActivo(false);
-            Swal.fire({
-                title: 'Error',
-                text: 'Ocurrió un error durante el reconocimiento de voz. Por favor, inténtalo de nuevo.',
-                icon: 'error',
-            });
-        };
-
-        reconocimiento.start();
-    };
-
     return (
         <div className="container">
             <h1>{fixedCursoId ? 'Tareas del Curso' : 'Mis Tareas'}</h1>
@@ -225,14 +304,13 @@ const TareasComponent = ({ fixedCursoId }) => {
                     color={reconocimientoActivo ? "secondary" : "primary"}
                     onClick={iniciarReconocimientoVoz}
                     className="mb-4"
-                    disabled={reconocimientoActivo}
                 >
                     {reconocimientoActivo ? (
                         <i className="bi bi-mic-fill"></i>
                     ) : (
                         <i className="bi bi-mic"></i>
                     )}
-                    {reconocimientoActivo ? "Escuchando..." : "Asignar Tarea por Voz"}
+                    {reconocimientoActivo ? "Detener Escucha" : "Asignar Tarea por Voz"}
                 </Button>
             )}
             <Button variant="contained" color="primary" onClick={() => abrirModalEdicion()} className="mb-4">
