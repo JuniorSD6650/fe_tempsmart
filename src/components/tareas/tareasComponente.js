@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Grid, Autocomplete } from '@mui/material';
 import { apiRequest, getTodayDate } from '../general/comun';
 import Swal from 'sweetalert2';
@@ -19,8 +19,9 @@ const TareasComponent = ({ fixedCursoId }) => {
     const [cursos, setCursos] = useState([]);
     const [iconos, setIconos] = useState([]);
     const [reconocimientoActivo, setReconocimientoActivo] = useState(false);
-    const [reconocimiento, setReconocimiento] = useState(null);  // Guardamos el objeto de reconocimiento
+    const reconocimientoRef = useRef(null);  // Usamos ref para la instancia del reconocimiento de voz
 
+    // Obtención de datos
     const obtenerTareas = useCallback(async () => {
         try {
             const endpoint = fixedCursoId ? `/tareas/curso/${fixedCursoId}/` : '/tareas/';
@@ -56,15 +57,16 @@ const TareasComponent = ({ fixedCursoId }) => {
     }, [obtenerTareas, obtenerCursos, obtenerIconos]);
 
     useEffect(() => {
-        if (!reconocimientoActivo && reconocimiento) {
-            reconocimiento.stop();
+        // Detener el reconocimiento cuando no está activo
+        if (!reconocimientoActivo && reconocimientoRef.current) {
+            reconocimientoRef.current.stop();
         }
-    }, [reconocimientoActivo, reconocimiento]);
+    }, [reconocimientoActivo]);
 
     const iniciarReconocimientoVoz = () => {
         if (reconocimientoActivo) {
             // Si ya está activo, lo detenemos
-            reconocimiento.stop();
+            reconocimientoRef.current.stop();
             setReconocimientoActivo(false);
             console.log("Tarea a guardar:", {
                 titulo: 'NOTA DE VOZ',
@@ -103,24 +105,15 @@ const TareasComponent = ({ fixedCursoId }) => {
             reconocimiento.onerror = (event) => {
                 console.error('Error en el reconocimiento de voz:', event.error);
                 setReconocimientoActivo(false);
-
-                if (event.error === 'no-speech') {
-                    Swal.fire({
-                        title: 'Sin habla detectada',
-                        text: 'No se detectó ninguna palabra. Por favor, inténtalo de nuevo.',
-                        icon: 'warning',
-                    });
-                } else if (event.error === 'aborted') {
-                    // El error "aborted" ocurre cuando el reconocimiento se detiene inesperadamente, no es grave
-                    console.warn('El reconocimiento de voz fue interrumpido.');
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error durante el reconocimiento de voz. Por favor, inténtalo de nuevo.',
-                        icon: 'error',
-                    });
-                }
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un error al realizar el reconocimiento de voz. Intenta nuevamente.',
+                    icon: 'error',
+                });
             };
+
+            // Guardar la instancia en el ref para usarla más tarde
+            reconocimientoRef.current = reconocimiento;
 
             // Iniciar el reconocimiento de voz
             reconocimiento.start();
@@ -252,7 +245,6 @@ const TareasComponent = ({ fixedCursoId }) => {
                     {reconocimientoActivo ? "Detener Escucha" : "Asignar Tarea por Voz"}
                 </Button>
             )}
-
             <Button variant="contained" color="primary" onClick={() => abrirModalEdicion()} className="mb-4">
                 Asignar Nueva Tarea
             </Button>
