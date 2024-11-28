@@ -158,8 +158,27 @@ const TareasComponent = ({ fixedCursoId }) => {
         reconocimiento.continuous = false;
         reconocimiento.interimResults = false;
 
-        reconocimiento.onstart = () => setReconocimientoActivo(true);
-        reconocimiento.onend = () => setReconocimientoActivo(false);
+        reconocimiento.onstart = () => {
+            setReconocimientoActivo(true);
+            Swal.fire({
+                title: 'Escuchando...',
+                text: 'Por favor, diga algo para agregar como descripción de la tarea.',
+                icon: 'info',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+        };
+
+        reconocimiento.onend = () => {
+            setReconocimientoActivo(false);
+            Swal.fire({
+                title: 'Finalizado',
+                text: 'El reconocimiento de voz ha terminado.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        };
 
         reconocimiento.onresult = (event) => {
             const descripcion = event.results[0][0].transcript;
@@ -176,6 +195,11 @@ const TareasComponent = ({ fixedCursoId }) => {
         reconocimiento.onerror = (event) => {
             console.error('Error en el reconocimiento de voz:', event.error);
             setReconocimientoActivo(false);
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error durante el reconocimiento de voz. Por favor, inténtalo de nuevo.',
+                icon: 'error',
+            });
         };
 
         reconocimiento.start();
@@ -185,8 +209,19 @@ const TareasComponent = ({ fixedCursoId }) => {
         <div className="container">
             <h1>{fixedCursoId ? 'Tareas del Curso' : 'Mis Tareas'}</h1>
             {fixedCursoId && (
-                <Button variant="contained" color="primary" onClick={iniciarReconocimientoVoz} className="mb-4">
-                    <i className="bi bi-mic"></i> Asignar Tarea por Voz
+                <Button
+                    variant="contained"
+                    color={reconocimientoActivo ? "secondary" : "primary"}
+                    onClick={iniciarReconocimientoVoz}
+                    className="mb-4"
+                    disabled={reconocimientoActivo}
+                >
+                    {reconocimientoActivo ? (
+                        <i className="bi bi-mic-fill"></i> 
+                    ) : (
+                        <i className="bi bi-mic"></i>
+                    )}
+                    {reconocimientoActivo ? "Escuchando..." : "Asignar Tarea por Voz"}
                 </Button>
             )}
             <Button variant="contained" color="primary" onClick={() => abrirModalEdicion()} className="mb-4">
