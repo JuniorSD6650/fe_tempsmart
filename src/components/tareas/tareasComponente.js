@@ -31,14 +31,13 @@ const TareasComponent = ({ fixedCursoId }) => {
     }, [fixedCursoId]);
 
     const obtenerCursos = useCallback(async () => {
-        if (fixedCursoId) return;
         try {
             const data = await apiRequest({ endpoint: '/cursos-usuario/', method: 'GET' });
             setCursos(data);
         } catch (error) {
             console.error('Error al cargar cursos:', error);
         }
-    }, [fixedCursoId]);
+    }, []);
 
     const obtenerIconos = useCallback(async () => {
         try {
@@ -52,10 +51,8 @@ const TareasComponent = ({ fixedCursoId }) => {
     useEffect(() => {
         obtenerTareas();
         obtenerIconos();
-        if (!fixedCursoId) {
-            obtenerCursos();
-        }
-    }, [fixedCursoId, obtenerTareas, obtenerCursos, obtenerIconos]);
+        obtenerCursos();
+    }, [obtenerTareas, obtenerCursos, obtenerIconos]);
 
     const abrirModalEdicion = (tarea = null) => {
         if (tarea) {
@@ -103,7 +100,21 @@ const TareasComponent = ({ fixedCursoId }) => {
             return;
         }
 
-        if (!nuevaTarea.curso) {
+        let cursoUsuarioId;
+
+        if (fixedCursoId) {
+            // Buscar el CursoUsuario correspondiente al fixedCursoId
+            const cursoUsuario = cursos.find((curso) => curso.curso.id === parseInt(fixedCursoId));
+
+            if (!cursoUsuario) {
+                Swal.fire('Error', 'No se encontró la relación CursoUsuario para el curso seleccionado.', 'error');
+                return;
+            }
+
+            cursoUsuarioId = cursoUsuario.id; // ID de la relación CursoUsuario
+        } else if (nuevaTarea.curso) {
+            cursoUsuarioId = nuevaTarea.curso.id; // ID de la relación seleccionada en el formulario
+        } else {
             Swal.fire('Error', 'Debes seleccionar un curso.', 'error');
             return;
         }
@@ -111,7 +122,7 @@ const TareasComponent = ({ fixedCursoId }) => {
         try {
             const tareaParaGuardar = {
                 ...nuevaTarea,
-                curso: nuevaTarea.curso.id,
+                curso: cursoUsuarioId, // ID de la relación CursoUsuario
                 icono: nuevaTarea.icono ? nuevaTarea.icono.id : null,
             };
 
@@ -187,8 +198,8 @@ const TareasComponent = ({ fixedCursoId }) => {
                 titulo: 'NOTA DE VOZ',
                 descripcion,
                 fecha_vencimiento: getTodayDate(),
-                icono: iconos.find(icono => icono.id === 7), // Icono ID 7
-                curso: fixedCursoId ? { id: fixedCursoId } : null // Si está en la vista por curso, asignamos el curso
+                icono: iconos.find(icono => icono.id === 7),
+                curso: fixedCursoId ? { id: fixedCursoId } : null
             });
         };
 
@@ -217,7 +228,7 @@ const TareasComponent = ({ fixedCursoId }) => {
                     disabled={reconocimientoActivo}
                 >
                     {reconocimientoActivo ? (
-                        <i className="bi bi-mic-fill"></i> 
+                        <i className="bi bi-mic-fill"></i>
                     ) : (
                         <i className="bi bi-mic"></i>
                     )}
